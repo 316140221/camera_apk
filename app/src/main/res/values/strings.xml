@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VirtualCam</string>
+    <string name="xposed_description">Virtual camera output replacer (test only)</string>
+
+    <string name="label_enabled">启用模块</string>
+    <string name="label_enable_photo">替换拍照</string>
+    <string name="label_enable_video">替换录制视频</string>
+    <string name="label_mode">生效范围</string>
+    <string name="label_allowlist">白名单包名（每行一个）</string>
+    <string name="hint_allowlist">例如：com.example.yourapp</string>
+    <string name="label_photo_path">替换图片路径</string>
+    <string name="label_video_path">替换视频路径</string>
+
+    <string name="mode_allowlist">仅白名单</string>
+    <string name="mode_all">全局</string>
+
+    <string name="button_import_photo">导入图片并覆盖到 photoPath</string>
+    <string name="button_import_video">导入视频并覆盖到 videoPath</string>
+    <string name="button_save">保存 config.json</string>
+</resources>
+
