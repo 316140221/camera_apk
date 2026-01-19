@@ -6,4 +6,5 @@ build/
 captures/
 local.properties
 **/build/
-
+keystore.properties
+*.jks

@@ -1,11 +1,12 @@
 # VirtualCam（LSPosed 模块）
 
-用于自研 App 端到端自动化测试：在 `Magisk + LSPosed` 环境中 Hook 相机输出，将拍照 JPEG 与录制视频最终文件替换为自定义素材。
+用于自研 App 端到端自动化测试：在 `Magisk + LSPosed` 环境中 Hook 相机输出与定位读数，将拍照 JPEG/录制视频最终文件替换为自定义素材，并可固定定位坐标。
 
 ## 支持范围（v1）
 
 - 拍照：`Camera1`（`android.hardware.Camera.takePicture`）
 - 录视频：`MediaRecorder`（`setOutputFile` + `stop` 后覆盖输出文件）
+- 定位：`LocationManager` + `Location` 读数（固定经纬度 + 反检测兜底）
 
 `Camera2` 及基于 `MediaCodec` 的自定义编码链路不在 v1 覆盖范围内。
 
@@ -15,6 +16,7 @@
 2. 在模块设置页写入配置与素材（默认目录：`/sdcard/VirtualCam/`）。
 3. 在 LSPosed 中勾选需要生效的目标 App（建议仅勾选你的自研 App 包名），重启目标 App。
 4. 在目标 App 内拍照/录制，输出文件应被替换为自定义素材。
+5. 定位配置页可点击“选择位置”打开地图选点（需联网）。
 
 ## 配置文件
 
@@ -27,10 +29,13 @@
   "enabled": true,
   "enablePhoto": true,
   "enableVideo": true,
+  "enableLocation": true,
   "mode": "allowlist",
   "allowlist": ["com.example.yourapp"],
   "photoPath": "/sdcard/VirtualCam/photo.jpg",
-  "videoPath": "/sdcard/VirtualCam/video.mp4"
+  "videoPath": "/sdcard/VirtualCam/video.mp4",
+  "latitude": 31.2304,
+  "longitude": 121.4737
 }
 ```
 
@@ -38,4 +43,3 @@
 
 - 建议使用白名单模式，仅对自研 App 生效，避免影响其它应用。
 - 目标 App 若无法读取 `/sdcard/VirtualCam/`（未授权存储权限等），替换可能失败。
-

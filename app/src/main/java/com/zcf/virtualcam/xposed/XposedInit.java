@@ -22,6 +22,9 @@ public final class XposedInit implements IXposedHookLoadPackage {
         try {
             Camera1Hook.install();
             MediaRecorderHook.install();
+            if (config.enableLocation) {
+                LocationHook.install();
+            }
         } catch (Throwable t) {
             Logger.log("安装 Hook 失败:", t);
         }

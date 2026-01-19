@@ -2,6 +2,7 @@ package com.zcf.virtualcam.xposed;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
@@ -21,6 +22,8 @@ public final class ConfigLoader {
     public static final String DEFAULT_CONFIG_PATH = DEFAULT_DIR + "/config.json";
     public static final String DEFAULT_PHOTO_PATH = DEFAULT_DIR + "/photo.jpg";
     public static final String DEFAULT_VIDEO_PATH = DEFAULT_DIR + "/video.mp4";
+    public static final double DEFAULT_LATITUDE = 0.0d;
+    public static final double DEFAULT_LONGITUDE = 0.0d;
 
     private static final long MIN_RELOAD_INTERVAL_MS = 500;
 
@@ -54,6 +57,12 @@ public final class ConfigLoader {
         }
         cached = new Cached(disk, now, exists, lastModified, length);
         return disk;
+    }
+
+    @NonNull
+    public static Config loadOrDefault() {
+        Config config = loadFromDisk();
+        return config != null ? config : Config.defaultDisabled();
     }
 
     @Nullable
@@ -90,6 +99,7 @@ public final class ConfigLoader {
             obj.put("enabled", config.enabled);
             obj.put("enablePhoto", config.enablePhoto);
             obj.put("enableVideo", config.enableVideo);
+            obj.put("enableLocation", config.enableLocation);
             obj.put("mode", config.mode);
             JSONArray arr = new JSONArray();
             for (String pkg : config.allowlist) {
@@ -98,6 +108,8 @@ public final class ConfigLoader {
             obj.put("allowlist", arr);
             obj.put("photoPath", config.photoPath);
             obj.put("videoPath", config.videoPath);
+            obj.put("latitude", config.latitude);
+            obj.put("longitude", config.longitude);
         } catch (JSONException e) {
             throw new IOException("序列化配置失败: " + e.getMessage(), e);
         }
@@ -106,7 +118,7 @@ public final class ConfigLoader {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(f, false);
-            fos.write(obj.toString(2).getBytes(StandardCharsets.UTF_8));
+            fos.write(obj.toString().getBytes(StandardCharsets.UTF_8));
         } finally {
             if (fos != null) {
                 try {
@@ -132,9 +144,12 @@ public final class ConfigLoader {
             boolean enabled = obj.optBoolean("enabled", false);
             boolean enablePhoto = obj.optBoolean("enablePhoto", true);
             boolean enableVideo = obj.optBoolean("enableVideo", true);
+            boolean enableLocation = obj.optBoolean("enableLocation", false);
             String mode = obj.optString("mode", Config.MODE_ALLOWLIST);
             String photoPath = obj.optString("photoPath", DEFAULT_PHOTO_PATH);
             String videoPath = obj.optString("videoPath", DEFAULT_VIDEO_PATH);
+            double latitude = sanitizeLatitude(obj.optDouble("latitude", DEFAULT_LATITUDE));
+            double longitude = sanitizeLongitude(obj.optDouble("longitude", DEFAULT_LONGITUDE));
 
             List<String> allowlist = new ArrayList<>();
             JSONArray arr = obj.optJSONArray("allowlist");
@@ -151,10 +166,35 @@ public final class ConfigLoader {
                 mode = Config.MODE_ALLOWLIST;
             }
 
-            return new Config(enabled, enablePhoto, enableVideo, mode, allowlist, photoPath, videoPath);
+            return new Config(
+                    enabled,
+                    enablePhoto,
+                    enableVideo,
+                    enableLocation,
+                    mode,
+                    allowlist,
+                    photoPath,
+                    videoPath,
+                    latitude,
+                    longitude
+            );
         } catch (JSONException e) {
             throw new IOException("解析配置失败: " + e.getMessage(), e);
         }
+    }
+
+    private static double sanitizeLatitude(double latitude) {
+        if (Double.isNaN(latitude) || latitude < -90.0d || latitude > 90.0d) {
+            return DEFAULT_LATITUDE;
+        }
+        return latitude;
+    }
+
+    private static double sanitizeLongitude(double longitude) {
+        if (Double.isNaN(longitude) || longitude < -180.0d || longitude > 180.0d) {
+            return DEFAULT_LONGITUDE;
+        }
+        return longitude;
     }
 
     private static final class Cached {

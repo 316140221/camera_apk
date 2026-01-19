@@ -6,11 +6,19 @@
     <string name="label_enabled">启用模块</string>
     <string name="label_enable_photo">替换拍照</string>
     <string name="label_enable_video">替换录制视频</string>
+    <string name="label_enable_location">替换定位</string>
     <string name="label_mode">生效范围</string>
     <string name="label_allowlist">白名单包名（每行一个）</string>
     <string name="hint_allowlist">例如：com.example.yourapp</string>
     <string name="label_photo_path">替换图片路径</string>
     <string name="label_video_path">替换视频路径</string>
+    <string name="label_latitude">纬度</string>
+    <string name="label_longitude">经度</string>
+    <string name="hint_latitude">例如：31.2304</string>
+    <string name="hint_longitude">例如：121.4737</string>
+    <string name="label_tab_common">通用</string>
+    <string name="label_tab_camera">相机</string>
+    <string name="label_tab_location">定位</string>
 
     <string name="mode_allowlist">仅白名单</string>
     <string name="mode_all">全局</string>
@@ -18,5 +26,16 @@
     <string name="button_import_photo">导入图片并覆盖到 photoPath</string>
     <string name="button_import_video">导入视频并覆盖到 videoPath</string>
     <string name="button_save">保存 config.json</string>
+    <string name="button_pick_location">选择位置</string>
+    <string name="toast_save_success">已保存：%1$s</string>
+    <string name="toast_save_failed">保存失败：%1$s</string>
+    <string name="toast_import_failed">导入失败：%1$s</string>
+    <string name="toast_import_photo_success">已导入图片：%1$s</string>
+    <string name="toast_import_video_success">已导入视频：%1$s</string>
+    <string name="toast_photo_path_empty">photoPath 为空</string>
+    <string name="toast_video_path_empty">videoPath 为空</string>
+    <string name="toast_permission_granted">权限已授予</string>
+    <string name="toast_permission_denied">未授予存储权限</string>
+    <string name="toast_invalid_location">经纬度格式错误</string>
+    <string name="toast_invalid_location_range">经纬度范围不合法</string>
 </resources>
-
